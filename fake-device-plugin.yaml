@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: fake-device-plugin-daemonset
+  namespace: kube-system
+spec:
+  template:
+    metadata:
+      labels:
+        name: fake-device-plugin-ds
+    spec:
+      containers:
+      - image: takmatsu/k8s-fake-device-plugin:0.0.1
+        name: fake-device-plugin
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        volumeMounts:
+          - name: device-plugin
+            mountPath: /var/lib/kubelet/device-plugins
+      volumes:
+        - name: device-plugin
+          hostPath:
+            path: /var/lib/kubelet/device-plugins
